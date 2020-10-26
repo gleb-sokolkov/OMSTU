@@ -1,0 +1,2 @@
+# OMSTU
+study stuff
