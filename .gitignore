@@ -1,2 +1,9 @@
+.vs
+.vscode
+.env
+.editorconfig
+node_modules
 *.csv
 *.mlx
+*.log
+*.exe
