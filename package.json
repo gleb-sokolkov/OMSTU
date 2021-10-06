@@ -1,0 +1,41 @@
+{
+  "name": "mag",
+  "version": "1.0.0",
+  "description": "study stuff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fridman": "node ./fridman",
+    "eslint": "eslint .",
+    "eslintFix": "eslint --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gleb-sokolkov/OMSTU.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gleb-sokolkov/OMSTU/issues"
+  },
+  "homepage": "https://github.com/gleb-sokolkov/OMSTU#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "ignorePatterns": [
+      "webpack.*.js",
+      "/public/**/*.js",
+      "/client/*.js",
+      "/node_modules"
+    ],
+    "env": {
+      "node": true,
+      "browser": false
+    }
+  }
+}
