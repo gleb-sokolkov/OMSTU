@@ -37,5 +37,9 @@
       "node": true,
       "browser": false
     }
+  },
+  "dependencies": {
+    "chart.js": "^3.6.0",
+    "chartjs-node-canvas": "^4.1.4"
   }
 }
