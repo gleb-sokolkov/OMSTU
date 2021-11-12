@@ -12,7 +12,7 @@ async function drawCanvas(datasets, filename) {
   const width = 500;
   const height = 500;
   const config = {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: datasets[0].data.map((t, i) => i),
       datasets,
@@ -62,25 +62,19 @@ function getN() {
 // равномерное распределение
 const U = {
   label: 'Равномерное распределение',
-  backgroundColor: 'rgb(255, 255, 255)',
-  borderColor: '#E98A15',
-  borderWidth: 4,
+  backgroundColor: '#E98A15',
   data: getU(),
 };
 // показательное распределение
 const P = {
   label: 'Показательное распределение',
-  backgroundColor: 'rgb(255, 255, 255)',
-  borderColor: '#003B36',
-  borderWidth: 4,
+  backgroundColor: '#003B36',
   data: getP(U.data),
 };
 // нормальное распределение
 const N = {
   label: 'Нормальное распределение',
-  backgroundColor: 'rgb(255, 255, 255)',
-  borderColor: '#6290C3',
-  borderWidth: 4,
+  backgroundColor: '#6290C3',
   data: getN(),
 };
 
