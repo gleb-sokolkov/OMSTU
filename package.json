@@ -36,7 +36,15 @@
     "env": {
       "node": true,
       "browser": false
-    }
+    },
+    "overrides": [{
+      "files": [
+        "./mm/**/*"
+      ],
+      "rules": {
+        "no-plusplus": "off"
+      }
+    }]
   },
   "dependencies": {
     "chart.js": "^3.6.0",
