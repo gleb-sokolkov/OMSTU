@@ -1,45 +1,11 @@
-/* eslint-disable no-plusplus */
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const fs = require('fs').promises;
-const path = require('path');
-
-const n = 50;
+const n = 500;
 const lambda = 1.0;
 const a = 2;
 const sigma = 3;
 
-async function drawCanvas(datasets, filename) {
-  const width = 500;
-  const height = 500;
-  const config = {
-    type: 'bar',
-    data: {
-      labels: datasets[0].data.map((t, i) => i),
-      datasets,
-    },
-    plugins: [{
-      id: 'background-colour',
-      beforeDraw: (chart) => {
-        const { ctx } = chart;
-        ctx.save();
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, width, height);
-        ctx.restore();
-      },
-    }],
-  };
+const getU = () => new Array(n).fill('').map(Math.random);
+const getP = () => getU().map((u) => -lambda * Math.log(u));
 
-  const chart = new ChartJSNodeCanvas({ width, height });
-  const buffer = await chart.renderToBuffer(config);
-  await fs.writeFile(path.join(__dirname, `./example/${filename}.png`), buffer, 'base64');
-}
-
-function getU() {
-  return new Array(n).fill('').map(Math.random);
-}
-function getP(U) {
-  return U.map((u) => -lambda * Math.log(u));
-}
 function getN() {
   const getX = (v, s) => v * Math.sqrt((-2 * Math.log(s)) / s);
   const Y = [];
@@ -59,29 +25,17 @@ function getN() {
   return Y;
 }
 
-// равномерное распределение
-const U = {
-  label: 'Равномерное распределение',
-  backgroundColor: '#E98A15',
-  data: getU(),
-};
-// показательное распределение
-const P = {
-  label: 'Показательное распределение',
-  backgroundColor: '#003B36',
-  data: getP(U.data),
-};
-// нормальное распределение
-const N = {
-  label: 'Нормальное распределение',
-  backgroundColor: '#6290C3',
-  data: getN(),
-};
+Array.prototype.ToExcel = function () {
+  return this.join('\n').replace(/\./g, ',');
+}
 
-// console.group('\x1b[1m', 'Распределения случайных величин');
-// console.log(`Равномерное: ${U.data}\n`);
-// console.log(`Показательное: ${P.data}\n`);
-// console.log(`Нормальное: ${N.data}\n`);
-// console.log('\x1b[0m');
+const U = getU();
+const P = getP();
+const N = getN();
 
-drawCanvas([U, P, N], 'dist');
+console.log('Равномерное распределение:');
+console.log(U.ToExcel(), '\n');
+console.log('Показательное распределение:');
+console.log(P.ToExcel(), '\n');
+console.log('Нормальное распределение:');
+console.log(N.ToExcel(), '\n');
