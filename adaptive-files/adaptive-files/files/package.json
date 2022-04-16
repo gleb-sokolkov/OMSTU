@@ -1,0 +1,24 @@
+{
+  "name": "files",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index",
+    "prod": "node index",
+    "prod_service": "pm2 index",
+    "w_dev": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debounce": "^1.2.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.51.0",
+    "webpack-cli": "^4.8.0"
+  }
+}

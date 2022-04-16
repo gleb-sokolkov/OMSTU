@@ -1,0 +1,114 @@
+.flex-0-0-auto {
+    flex: 0 0 auto;
+}
+
+.flex-1-1-auto {
+    flex: 1 1 auto;
+}
+
+.flex---auto {
+    flex-basis: auto;
+}
+
+.flex-1-1-33,
+.flex-1-1-33-break {
+    flex: 1 1 33.33%;
+}
+
+.flex-0-1-33 {
+    flex: 0 1 33.33%;
+}
+
+.flex---33, .flex---33-break {
+    flex-basis: 33.33%;
+}
+
+.flex-1-1-66,
+.flex-1-1-66-break {
+    flex: 1 1 66.66%;
+}
+
+.flex---66 {
+    flex-basis: 66.66%;
+}
+
+.flex---50 {
+    flex-basis: 50%;
+}
+
+.flex-1-1-50 {
+    flex: 1 1 50%;
+}
+
+.flex-0-0-50 {
+    flex: 0 0 50%;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse;
+}
+
+
+.flex-order-m1 { 
+    order: -1;
+}
+.flex-order-0 {
+    order: 0;
+}
+.flex-order-1 {
+    order: 1;
+}
+.flex-order-2 {
+    order: 2;
+}
+.flex-order-3 {
+    order: 3;
+}
+.flex-order-4 {
+    order: 4;
+}
+.flex-order-5 {
+    order: 5;
+}
+.flex-order-6 {
+    order: 6;
+}
+.flex-order-7 {
+    order: 7;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-wrap-r {
+    flex-wrap: wrap-reverse;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.align-self-stretch {
+    align-self: stretch;
+}
+
+.overflow-hidden {
+    overflow: hidden hidden;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .flex-1-1-66-break, 
+    .flex-1-1-33-break,
+    .flex---33-break {
+        flex: 1 1 100%;
+    }
+}

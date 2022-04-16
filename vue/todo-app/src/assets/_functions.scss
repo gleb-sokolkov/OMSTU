@@ -1,0 +1,45 @@
+@function str-split($string, $separator) {
+  $string-arr: ();
+  $index: str-index($string: $string, $substring: $separator);
+  
+  @while $index != null {
+    $item: str-slice($string: $string, $start-at: 1, $end-at: $index - 1);
+    $string-arr: append($list: $string-arr, $val: $item);
+    $string: str-slice($string: $string, $start-at: $index + 1);
+    $index: str-index($string: $string, $substring: $separator);
+  }
+
+  $string-arr: append($list: $string-arr, $val: $string);
+
+  @return $string-arr;
+}
+
+@function drop-shape($x, $y, $s, $c, $color) {
+  $sh: '';
+  $step-x: calc($x / $c);
+  $step-y: calc($y / $c);
+
+  @for $i from 1 through $c {
+    $next: #{$i * $step-x}px #{$i * $step-y}px #{$s}px #{$color};
+    $sh: #{$sh}, #{$next};
+  }
+
+  @return $sh;
+}
+
+@function image-shape($x, $y, $s, $c, $color) {
+  $shape: drop-shape($x, $y, $s, $c, $color);
+  $shape-str: quote($string: #{$shape});
+  $shape-array: str-split($shape-str, ",");
+  $img-shape: '';
+
+  @debug $shape-array;
+
+  @each $i in $shape-array {
+    $i: unquote($string: $i);
+    $img-shape: #{$img-shape} drop-shadow(#{$i});
+  }
+  
+  @return $img-shape;
+}
+

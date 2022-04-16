@@ -1,0 +1,314 @@
+
+BeMyGuest!
+SMDC-BOJG-IYYP-FOGK-JKOW
+
+VTG56%zkL18
+
+при краше: sudo mongod --repair --storageEngine=mmapv1 --dbpath /var/lib/mongo
+запуск демона: sudo mongod --fork --logpath /var/log/mongodb/mongod.log --logappend --storageEngine=mmapv1 --dbpath /var/lib/mongo
+
+#a6aaf3
+#40556b
+
+(fill="#B7B7B7")
+$1 class="scheme-block-border"
+
+(fill="#66A3FF")
+$1 class="scheme-block-bg"
+
+[\s\n](\n)
+
+gleb
+H3f9th#egewec
+
+class BoxArray {
+  constructor(size, defaultValue) {
+    this.size = size; 
+    this.defaultValue = defaultValue;
+    this.array = new Array(size)
+    .fill(0).map((_, x) => new Array(size)
+      .fill(0).map((_, y) => ({
+        value: defaultValue,
+        pos: { x, y },
+    })));
+  }
+  
+  get(x, y) {
+    if(!this.contains(x, y)) return this.defaultValue; 
+    return this.array[x][y].value;
+  }
+  
+  set(x, y, value) {
+    if(!this.contains(x, y)) return;
+    this.array[x, y].value = value;
+  }
+  
+  contains(x, y) {
+    return x < this.size && x >= 0 && y < this.size && y >= 0;
+  }
+}
+
+class Cell extends React.Component { 
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+  
+  handleClick() {
+    this.props.makeTurn(this.props.cell);
+  }
+  
+  render() {
+    return (
+      <td 
+        className={`
+        cell 
+        ${this.props.className}
+        ${this.props.cell.value ? 'cell_disabled' : ''}
+        `}
+        onClick={this.handleClick}
+      >
+        <span className="cell__player">
+          { this.props.cell.value }
+        </span>
+      </td>
+    );  
+  }
+}
+
+class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      field: new BoxArray(props.size, ''),
+      players: {
+        current: props.players[0],
+        all: props.players,
+        winner: '',
+      },
+      winLines: {
+        ray: new Array(props.winLineSize + 1).fill(0).map((_, i) => i),
+        plus: new Array(props.winLineSize * 2 - 1)
+        .fill(props.winLineSize - 1)
+        .map((offset, i) => i - offset),
+      },
+    };
+    this.makeTurn = this.makeTurn.bind(this);
+  }
+  
+  makeTurn(cell) {
+    if(this.isCellWasUsed(cell)) return;
+    
+    this.setState(state => {
+      cell.value = state.players.current;
+      if(this.isSomeoneWon_v2(cell)) {
+        state.players.winner = state.players.current;
+      } else {
+        this.shiftPlayer();
+      }
+      return state;
+    });
+  }
+  
+  isCellWasUsed(cell) {
+    return !!cell.value; 
+  }
+  
+  isSomeoneWon() {
+    const { field, winLines: { ray } } = this.state;
+    const lines = [];
+    field.array.forEach((row, x) => {
+      row
+        .filter(cell => cell.value)
+        .forEach((cell, y) => {
+          const north = ray.every(el => field.get(cell.pos.x - el, cell.pos.y) === cell.value);
+          const east = ray.every(el => field.get(cell.pos.x, cell.pos.y + el) === cell.value);
+          const south = ray.every(el => field.get(cell.pos.x + el, cell.pos.y) === cell.value);
+          const west = ray.every(el => field.get(cell.pos.x, cell.pos.y - el) === cell.value);
+          const northEast = ray.every(el => field.get(cell.pos.x - el, cell.pos.y + el) === cell.value);
+          const southEast = ray.every(el => field.get(cell.pos.x + el, cell.pos.y + el) === cell.value);
+          const southWest = ray.every(el => field.get(cell.pos.x + el, cell.pos.y - el) === cell.value);
+          const northWest = ray.every(el => field.get(cell.pos.x - el, cell.pos.y - el) === cell.value);
+        
+          lines.push(north, east, south, west, northEast, southEast, southWest, northWest);
+      });
+    });
+    
+    return lines.some(l => l);
+  }
+  
+  isSomeoneWon_v2(cell) {
+    const { value, pos } = cell;
+    const { field, winLines: { ray, plus } } = this.state;
+
+    const north = ray.every(el => field.get(pos.x - el, pos.y) === value);
+    const east = ray.every(el => field.get(pos.x, pos.y + el) === value);
+    const south = ray.every(el => field.get(pos.x + el, pos.y) === value);
+    const west = ray.every(el => field.get(pos.x, pos.y - el) === value);
+    
+    const northEast = ray.every(el => field.get(pos.x - el, pos.y + el) === value);
+    const southEast = ray.every(el => field.get(pos.x + el, pos.y + el) === value);
+    const southWest = ray.every(el => field.get(pos.x + el, pos.y - el) === value);
+    const northWest = ray.every(el => field.get(pos.x - el, pos.y - el) === value);
+    
+    const vertical = plus.every(el => field.get(pos.x + el, pos.y) === value);
+    const horizontal = plus.every(el => field.get(pos.x, pos.y + el) === value);
+    const diagonal = plus.every(el => field.get(pos.x + el, pos.y + el) === value);
+    const diagonalReverse = plus.every(el => field.get(pos.x + el, pos.y - el) === value);
+       
+    return [
+      north, east, south, west,
+      northEast, southEast, southWest, northWest,
+      vertical, horizontal, diagonal, diagonalReverse
+    ].some(l => l);
+  }
+  
+  shiftPlayer() {
+    this.setState(state => {
+      const { current, all } = state.players;
+      const next = (all.indexOf(current) + 1) % all.length;
+      state.players.current = all[next];
+      return state;
+    });
+  }
+  
+  render() {
+    return (
+      <div class="board">
+        <h2 class="board__title">
+          <span class="board__pre-text">{this.props.preText}</span>
+          <span class="board__winner">{this.state.players.winner}</span>
+        </h2>
+        <table className={`table ${this.props.className}`}>
+          <tbody>{
+            this.state.field.array.map(row => <tr className='table__row'>{
+              row.map(cell => 
+                <Cell
+                  className='table__cell'
+                  makeTurn={this.makeTurn}
+                  cell={cell}
+                />
+              )                         
+            }</tr>)
+        }</tbody>
+        </table>
+      </div>
+    );
+  }
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  
+  render() {
+    return (
+      <div className="app">
+        <h1 className="title">{this.props.title}</h1>
+        <p className="description">{this.props.description}</p>
+        <Board 
+          className="app__board" 
+          size={this.props.size}
+          players={this.props.players}
+          winLineSize={this.props.winLineSize}
+          preText={this.props.preText}
+        />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App 
+      title="TIC TAC TOE" 
+      description={`
+        Tic-tac-toe is played on a three-by-three grid by two players, 
+        who alternately place the marks X and O in one of the nine spaces in the grid.
+        There is no universally-agreed rule as to who plays first, 
+        but in this article the convention that X plays first is used.
+        Players soon discover that the best play from both parties leads to a draw. 
+        Hence, tic-tac-toe is often played by young children who may not have discovered the optimal strategy.
+      `}
+      size={4}
+      players={['X', 'O']}
+      winLineSize={2}
+      preText="Winner: "
+      />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+body, html, *, *::after, *::before {
+  box-sizing: border-box;
+  position: relative;
+}
+
+a:not([class]) {
+  color: inherit;
+}
+
+table {
+  border-collapse: inherit;   
+}
+
+.app {
+  max-width: 30rem;
+  margin: 0 auto;
+  
+  &__title {
+    
+  }
+  
+  &__description {
+    
+  }
+  
+  &__board {
+    border-collapse: collapse;
+    
+  }
+}
+
+.board {
+  margin: 0 auto;
+  
+  &__row {
+    
+  }
+  
+  &__cell {
+    border: 1px solid;
+  }
+}
+
+.cell {
+  --size: 4em;
+  width: var(--size);
+  height: var(--size);
+  padding: 0.5em;
+  user-select: none;
+  text-align: center;
+  
+  &_disabled {
+    pointer-events: none;
+    background: grey;
+  }
+  
+  &__player {
+    line-height: 0;
+    vertical-align: middle;
+  }
+}
+
+<div id="root"></div>
+
+
+насчет автоматизации по работе с браузером в ходу сейчас: Selenium, Puppetter, Cypress, TestCafe

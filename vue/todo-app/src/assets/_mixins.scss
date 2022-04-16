@@ -1,0 +1,9 @@
+@mixin lines($line-width, $col1, $col2, $angle: 45deg) {
+  background: repeating-linear-gradient(
+      $angle,
+      $col2,
+      $col2 $line-width,
+      $col1 $line-width,
+      $col1 calc($line-width * 2)
+  );
+}
